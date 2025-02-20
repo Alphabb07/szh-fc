@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SZH FC | Sito Ultra Avanzato</title>
+  
+  <!-- Meta SEO -->
+  <meta name="description" content="Il sito ultra-moderno della SZH FC con effetti Parallax, Video Background, Carousel, 3D Tilt e molto altro. Entra nel mondo SZH!"/>
+  <meta name="keywords" content="Sito Calcio, SZH FC, Parallax, Animazioni, Serie A, 3D Tilt, JavaScript avanzato"/>
+
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon-szhfc.png" type="image/png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /********************************************************
+     ********************** VARIABILI CSS *******************
+     ********************************************************/
+    :root {
+      --color-primary: #012A4A;     /* Blu scuro */
+      --color-secondary: #00509d;   /* Blu medio */
+      --color-accent: #F0AB00;      /* Giallo acceso */
+      --color-white: #ffffff;
+      --color-dark: #111111;
+      /* Testo e sfondo */
+      --gradient-header: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      --transition-fast: 0.3s;
+      --transition-medium: 0.5s;
+    }
+
+    /********************************************************
+     ********************** RESET & BASE *********************
+     ********************************************************/
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background-color: var(--color-white); /* Sfondo bianco */
+      color: var(--color-dark);
+      overflow-x: hidden; /* Evita scrollbar orizzontali */
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    ul {
+      list-style: none;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /********************************************************
+     ********************** PRELOADER ************************
+     ********************************************************/
+    #preloader {
+      position: fixed;
+      z-index: 10000;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: var(--color-white);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity var(--transition-medium);
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #ccc;
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .preloader-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /********************************************************
+     ********************** TOP BAR MARQUEE ******************
+     ********************************************************/
+    .top-bar {
+      width: 100%;
+      background: var(--color-accent);
+      padding: 5px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 999;
+      color: var(--color-dark);
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .top-bar span {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 15s linear infinite;
+    }
+    @keyframes marquee {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /********************************************************
+     ************************ HEADER *************************
+     ********************************************************/
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--gradient-header);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 900;
+      transition: background 0.4s;
+    }
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .club-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .club-logo img {
+      width: 70px;
+      transition: transform 0.3s;
+    }
+    .club-logo img:hover {
+      transform: scale(1.08);
+    }
+    .club-info h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--color-white);
+      font-size: 1.8rem;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+    .club-info p {
+      color: var(--color-white);
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    nav ul {
+      display: flex;
+      gap: 20px;
+    }
+    nav ul li a {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 500;
+      color: var(--color-white);
+      transition: background-color var(--transition-fast), transform var(--transition-fast);
+    }
+    nav ul li a:hover {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    /********************************************************
+     ************** HERO SECTION - VIDEO BACKGROUND *********
+     ********************************************************/
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; 
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      filter: brightness(70%);
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 2;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--color-white);
+      padding: 0 20px;
+      animation: fadeInUp 1.5s ease-in-out;
+    }
+    .hero-content h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      max-width: 800px;
+      line-height: 1.4;
+    }
+    .hero-btn {
+      display: inline-block;
+      background-color: var(--color-accent);
+      color: var(--color-dark);
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 700;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+    .hero-btn:hover {
+      background-color: #cc8e00;
+      transform: translateY(-3px);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /********************************************************
+     ***************** SEZIONE (SCROLL REVEAL) **************
+     ********************************************************/
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 20px 60px;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-title h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem;
+      color: var(--color-primary);
+      display: inline-block;
+      position: relative;
+    }
+    .section-title h3::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: var(--color-accent);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+    .section-content {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s ease;
+    }
+    .section-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /********************************************************
+     *************** CAROUSEL SEZIONE PARTITE ***************
+     ********************************************************/
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .carousel-slide {
+      min-width: 100%;
+      background: var(--color-white);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 30px;
+      margin: 0 10px;
+      text-align: center;
+    }
+    .carousel-slide h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: var(--color-secondary);
+    }
+    .carousel-slide ul li {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-slide ul li::before {
+      content: "•";
+      color: var(--color-accent);
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+    .carousel-buttons {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+    .carousel-btn {
+      background: var(--color-accent);
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .carousel-btn:hover {
+      background: #cc8e00;
+    }
+
+    /********************************************************
+     *************** CARDS 3D TILT (ROSA SQUADRA) ***********
+     ********************************************************/
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    }
+    .tilt-card {
+      background: var(--color-white);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out;
+    }
+    .tilt-card h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--color-secondary);
+    }
+    .tilt-card p {
+      font-size: 0.95rem;
+      color: var(--color-dark);
+    }
+    .tilt-card img {
+      width: 100px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      border: 3px solid var(--color-accent);
+    }
+
+    /********************************************************
+     ***************** PARALLAX BANNER SPONSOR **************
+     ********************************************************/
+    .parallax-banner {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: url('images/stadio-szhfc.jpg') center center no-repeat;
+      background-size: cover;
+      background-attachment: fixed; /* Parallax */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--color-white);
+      text-align: center;
+      margin: 80px 0;
+    }
+    .parallax-banner::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+    }
+    .parallax-banner h2 {
+      position: relative;
+      z-index: 1;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem;
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /********************************************************
+     ************************ FOOTER *************************
+     ********************************************************/
+    footer {
+      position: relative;
+      background: var(--gradient-header);
+      color: var(--color-white);
+      padding: 40px 20px;
+      text-align: center;
+      overflow: hidden;
+    }
+    /* Onde decorative (opzionali) */
+    footer .wave {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      width: 100%;
+      height: auto;
+      transform: rotate(180deg);
+      opacity: 0.7;
+    }
+    footer .footer-logo {
+      width: 80px;
+      margin: 0 auto 15px;
+      transition: transform 0.3s;
+    }
+    footer .footer-logo:hover {
+      transform: scale(1.1);
+    }
+    footer p {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    .footer-social-icons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    .footer-social-icons a img {
+      width: 30px; 
+      height: 30px;
+      transition: transform 0.3s;
+    }
+    .footer-social-icons a img:hover {
+      transform: scale(1.2);
+    }
+
+    /********************************************************
+     ********************* BACK TO TOP **********************
+     ********************************************************/
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--color-accent);
+      color: var(--color-dark);
+      width: 50px; 
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
+      z-index: 9999;
+    }
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: #cc8e00;
+      transform: scale(1.1);
+    }
+
+    /********************************************************
+     ********************** MEDIA QUERIES ********************
+     ********************************************************/
+    @media screen and (max-width: 768px) {
+      .hero-content h2 {
+        font-size: 2rem;
+      }
+      .hero-content p {
+        font-size: 1rem;
+      }
+      .section-title h3 {
+        font-size: 1.8rem;
+      }
+      .carousel-slide h4 {
+        font-size: 1.3rem;
+      }
+      header .club-info h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- TOP BAR MARQUEE (notizie flash o sponsor) -->
+  <div class="top-bar">
+    <span>ULTIME: SZH FC perde 5-1 l'ultima partita | Aspettando la prossima stagione... | Nuovi sponsor in arrivo!</span>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="club-logo">
+        <img src="images/LOGO.jpeg" alt="Logo SZH FC">
+        <div class="club-info">
+          <h1>SZH FC</h1>
+          <p>La Passione per il Calcio</p>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#news">Notizie</a></li>
+          <li><a href="#partite">Partite</a></li>
+          <li><a href="#squadra">Squadra</a></li>
+          <li><a href="#contatti">Contatti</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION CON VIDEO BACKGROUND -->
+  <section class="hero-section">
+    <!-- Sostituisci con un tuo video MP4 in locale, oppure un link mp4 esterno -->
+    <video class="hero-video" src="videos/stadio.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h2>Benvenuti nel Futuro di SZH FC</h2>
+      <p>
+Noi siamo meglio della serie A      </p>
+      <a class="hero-btn" href="#contatti">Contattaci</a>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <!-- NOTIZIE -->
+    <div class="section-title" id="news">
+      <h3>Ultime Notizie</h3>
+    </div>
+    <div class="section-content">
+      <p>
+       Il presidente del club ha dichiarato che la squadra sarà rafforzata per la prossima stagione, in avvio l'asta di riparazione.
+      </p>
+    </div>
+
+    <!-- CAROUSEL PARTITE -->
+    <div class="section-title" id="partite" style="margin-top: 80px;">
+      <h3>Partite e Risultati</h3>
+    </div>
+    <div class="section-content">
+      <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- Slide 1 -->
+          <div class="carousel-slide">
+            <h4>Ultime Partite</h4>
+            <ul>
+              <li>SZH FC 1 - 5  VITIA A</li>
+            </ul>
+          </div>
+          <!-- Slide 2 -->
+          <div class="carousel-slide">
+            <h4>Prossime Gare</h4>
+            <ul>
+              <li>Da sorteggiare</li>
+            </ul>
+          </div>
+          <!-- Slide 3 -->
+          <div class="carousel-slide">
+            <h4>Statistiche Stagionali</h4>
+            <ul>
+              <li>Punti in classifica: 0</li>
+              <li>Gol segnati: 1</li>
+              <li>Gol subiti: 5</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Frecce del carousel -->
+        <div class="carousel-buttons">
+          <button class="carousel-btn" id="prevBtn">&#10094;</button>
+          <button class="carousel-btn" id="nextBtn">&#10095;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARALLAX BANNER -->
+    <div class="parallax-banner">
+      <h2>Supporta la nostra squadra! #ForzaSZH</h2>
+    </div>
+
+    <!-- ROSA DELLA SQUADRA CON 3D TILT -->
+    <div class="section-title" id="squadra" style="margin-top: 80px;">
+      <h3>La Squadra</h3>
+    </div>
+    <div class="section-content">
+      <p>
+        Conosci i protagonisti della nostra rosa: dai portieri agli attaccanti, ognuno con la propria storia e il proprio talento.
+      </p>
+      <div class="card-grid">
+        <!-- Esempio Card 3D Tilt -->
+        <div class="tilt-card" data-tilt>
+          <img src="images/player1.jpg" alt="Portiere SZH FC">
+          <h4>Nicolo' Mariani (#2)</h4>
+          <p>Centrocampista offensivo Centale</p>
+        </div>
+        <div class="tilt-card" data-tilt>
+          <img src="images/player2.jpg" alt="Difensore SZH FC">
+          <h4>Alfredo ?? (#8)</h4>
+          <p>Terzino Destro</p>
+        </div>
+        <div class="tilt-card" data-tilt>
+          <img src="images/player3.jpg" alt="Centrocampista SZH FC">
+          <h4>Andrea Magaletti (#12)</h4>
+          <p>Centrocampista</p>
+          
+        </div>
+        <div class="tilt-card" data-tilt>
+          <img src="images/player4.jpg" alt="Attaccante SZH FC">
+          <h4>Domenico Martiradonna (#20)</h4>
+          <p>Attaccante</p>
+        </div>
+        <div class="tilt-card" data-tilt>
+          <img src="images/player5.jpg" alt="Attaccante SZH FC">
+          <h4>Giovanni Paolo  Attolico (#99)</h4>     
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contatti">
+    <!-- Onde decorative (opzionali) -->
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fff" fill-opacity="1" d="M0,224L1440,96L1440,320L0,320Z"></path></svg>
+    <img src="images/LOGO.jpeg" alt="SZH FC Footer Logo" class="footer-logo">
+    <p>SZH FC | ITT Panetti Pitagora - Via Giuseppe Re David , 196, 70010, Città (BA) - Italia</p>
+    <p> Email: presidenzaszh@gmail.com</p>
+    <p>© 2025 SZH FC. Tutti i diritti riservati.</p>
+    <div class="footer-social-icons">
+      <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram SZH FC"></a>
+      <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png" alt="Facebook SZH FC"></a>
+      <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png" alt="Twitter SZH FC"></a>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP BUTTON -->
+  <div class="back-to-top" id="backToTopBtn">&#8679;</div>
+
+  <!-- JAVASCRIPT AVANZATO -->
+  <script>
+    /*********************************************************
+     ******************** PRELOADER **************************
+     *********************************************************/
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      setTimeout(() => {
+        preloader.classList.add('preloader-hidden');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 1200);
+    });
+
+    /*********************************************************
+     *************** SCROLL REVEAL (IntersectionObserver) ****
+     *********************************************************/
+    const revealSections = document.querySelectorAll('.section-content');
+    const revealOptions = { threshold: 0.15 };
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, revealOptions);
+    revealSections.forEach(section => {
+      revealObserver.observe(section);
+    });
+
+    /*********************************************************
+     ****************** CAROUSEL PARTITE *********************
+     *********************************************************/
+    const carouselTrack = document.getElementById('carouselTrack');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentSlide = 0;
+    let totalSlides = document.querySelectorAll('.carousel-slide').length;
+    
+    function updateCarousel() {
+      carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+    prevBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide <= 0) ? totalSlides-1 : currentSlide-1;
+      updateCarousel();
+    });
+    nextBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    });
+    // Auto-play carousel
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    }, 5000);
+
+    /*********************************************************
+     ********** 3D TILT CARDS (effetto con JS) ***************
+     *********************************************************/
+    const tiltCards = document.querySelectorAll('[data-tilt]');
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * 8; 
+        const rotateY = ((x - centerX) / centerX) * 8;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0) rotateY(0)';
+      });
+    });
+
+    /*********************************************************
+     *************** BACK TO TOP BUTTON **********************
+     *********************************************************/
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY > 300) {
+        backToTopBtn.classList.add('show');
+      } else {
+        backToTopBtn.classList.remove('show');
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
